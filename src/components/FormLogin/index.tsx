@@ -81,13 +81,12 @@ export default function FormLogin() {
           E-mail
         </label>
         <input
-          type="email"
+          type="text"
           id="email"
           name="email"
           className="border border-gray-300 rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={user.email}
           onChange={handleChange}
-          required
           aria-invalid={error ? 'true' : 'false'}
         />
       </div>
@@ -105,7 +104,6 @@ export default function FormLogin() {
           className="border border-gray-300 rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={user.password}
           onChange={handleChange}
-          required
           aria-invalid={error ? 'true' : 'false'}
         />
         <TogglePasswordVisibility
