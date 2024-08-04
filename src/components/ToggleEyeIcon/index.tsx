@@ -1,17 +1,12 @@
 'use client'
 
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/16/solid'
-import { FC } from 'react'
+import { ToggleEyeIconProps } from './types'
 
-type Props = {
-  showPassword: boolean
-  className: string
-}
-
-export const ToggleEyeIcon: FC<Props> = ({
+export function ToggleEyeIcon({
   showPassword = true,
   className = '',
-}) => {
+}: ToggleEyeIconProps) {
   return showPassword ? (
     <EyeIcon className={`w-6 h-6 ${className}`} />
   ) : (

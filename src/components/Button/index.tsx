@@ -1,18 +1,10 @@
-'use client'
+import { ButtonProps } from './types'
 
-import { FC } from 'react'
-
-type Props = {
-  type?: 'button' | 'submit'
-  label: string
-  disabled: boolean
-}
-
-export const Button: FC<Props> = ({
+export function Button({
+  disabled = false,
+  label,
   type = 'submit',
-  label = '',
-  disabled = true,
-}) => {
+}: ButtonProps) {
   return (
     <button
       type={type}

@@ -1,15 +1,16 @@
 'use client'
 
+import { Button } from '@/components/Button'
+import { ShowErrors } from '@/components/ShowErrors'
+import { TogglePasswordVisibility } from '@/components/TogglePasswordVisibility'
 import { AuthContext } from '@/contexts/AuthContext'
+import validateEmail from '@/helpers/validate-email'
+import { UserProps } from '@/types/user'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
-import validateEmail from '../../../helpers/validate-email'
-import { Button } from '../Button'
-import { ShowErrors } from '../ShowErrors'
-import { TogglePasswordVisibility } from '../TogglePasswordVisibility'
 
 export default function FormLogin() {
-  const [user, setUser] = useState<UserAuth>({
+  const [user, setUser] = useState<UserProps>({
     email: 'usuario@gmail.com',
     password: 'usuario',
   })
@@ -55,9 +56,10 @@ export default function FormLogin() {
 
       if (signInResult.user) {
         router.replace('/tasks')
-      } else {
-        setError(signInResult.error)
+        return false
       }
+
+      setError(signInResult.error)
     } catch (error) {
       setError('Erro ao realizar login. Tente novamente.')
     }

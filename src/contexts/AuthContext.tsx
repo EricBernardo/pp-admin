@@ -1,6 +1,7 @@
 'use client'
 
-import { signInRequest } from '@/app/services/auth'
+import { signInRequest } from '@/services/auth'
+import { UserProps } from '@/types/user'
 import { useRouter } from 'next/navigation'
 import { parseCookies, setCookie } from 'nookies'
 import {
@@ -11,27 +12,22 @@ import {
   useState,
 } from 'react'
 
-type User = {
-  name: string
-  email: string
+type SignInProps = {
+  user: UserProps | null
+  error: string | null
 }
 
 type AuthContextType = {
   isAuthenticated: boolean
   loading: boolean
-  user: User | null
-  signIn: (data: SignInData) => Promise<void>
-}
-
-type SignInData = {
-  email: string
-  password: string
+  user: UserProps | null
+  signIn: (data: UserProps) => Promise<SignInProps>
 }
 
 export const AuthContext = createContext({} as AuthContextType)
 
 export function AuthProvider({ children }: PropsWithChildren) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<UserProps | null>(null)
   const [loading, setLoading] = useState(true)
 
   const router = useRouter()
@@ -48,7 +44,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setLoading(false)
   }, [])
 
-  async function signIn({ email, password }: SignInData) {
+  async function signIn({ email, password }: UserProps) {
     const { user } = await signInRequest({
       email,
       password,
@@ -56,7 +52,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     if (user) {
       setCookie(undefined, 'next-auth.user', JSON.stringify(user), {
-        maxAge: 12 * 60 * 60, // 12 hour
+        maxAge: process.env.AUTH_TTL,
       })
 
       setUser(user)
@@ -64,8 +60,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
       return {
         user: {
           name: user.name,
-          emai: user.email,
+          email: user.email,
         },
+        error: null,
       }
     }
     return {
