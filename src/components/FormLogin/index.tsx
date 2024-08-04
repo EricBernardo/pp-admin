@@ -1,7 +1,7 @@
 'use client'
 
-import { get } from '@/utils/api'
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { AuthContext } from '@/contexts/AuthContext'
+import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import validateEmail from '../../../helpers/validate-email'
 import { Button } from '../Button'
 import { ShowErrors } from '../ShowErrors'
@@ -12,6 +12,8 @@ export default function FormLogin() {
     email: 'usuario@gmail.com',
     password: 'usuario',
   })
+
+  const { signIn } = useContext(AuthContext)
 
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -43,29 +45,31 @@ export default function FormLogin() {
       return
     }
 
-    setError(null)
-    setLoading(true)
+    await signIn(user)
 
-    try {
-      const data = await get<User[]>('/account', {
-        email: user.email,
-        password: user.password,
-      })
+    // setError(null)
+    // setLoading(true)
 
-      if (data.length) {
-        const findUser = data.find((e) => e.password === user.password)
+    // try {
+    //   const data = await get<User[]>('/account', {
+    //     email: user.email,
+    //     password: user.password,
+    //   })
 
-        if (findUser) {
-          alert('Login realizado com sucesso!')
-          return
-        }
-      }
-      setError('Usuário não encontrado ou senha incorreta.')
-    } catch (error) {
-      setError('Erro ao realizar login. Tente novamente.')
-    } finally {
-      setLoading(false)
-    }
+    //   if (data.length) {
+    //     const findUser = data.find((e) => e.password === user.password)
+
+    //     if (findUser) {
+    //       alert('Login realizado com sucesso!')
+    //       return
+    //     }
+    //   }
+    //   setError('Usuário não encontrado ou senha incorreta.')
+    // } catch (error) {
+    //   setError('Erro ao realizar login. Tente novamente.')
+    // } finally {
+    //   setLoading(false)
+    // }
   }
 
   return (
