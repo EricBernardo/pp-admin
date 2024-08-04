@@ -1,6 +1,7 @@
 'use client'
 
 import { AuthContext } from '@/contexts/AuthContext'
+import { useRouter } from 'next/navigation'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import validateEmail from '../../../helpers/validate-email'
 import { Button } from '../Button'
@@ -12,6 +13,8 @@ export default function FormLogin() {
     email: 'usuario@gmail.com',
     password: 'usuario',
   })
+
+  const router = useRouter()
 
   const { signIn } = useContext(AuthContext)
 
@@ -35,6 +38,8 @@ export default function FormLogin() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    setError(null)
+
     if (!user.email || !user.password) {
       setError('Por favor, preencha todos os campos.')
       return
@@ -45,31 +50,17 @@ export default function FormLogin() {
       return
     }
 
-    await signIn(user)
+    try {
+      const signInResult = await signIn(user)
 
-    // setError(null)
-    // setLoading(true)
-
-    // try {
-    //   const data = await get<User[]>('/account', {
-    //     email: user.email,
-    //     password: user.password,
-    //   })
-
-    //   if (data.length) {
-    //     const findUser = data.find((e) => e.password === user.password)
-
-    //     if (findUser) {
-    //       alert('Login realizado com sucesso!')
-    //       return
-    //     }
-    //   }
-    //   setError('Usuário não encontrado ou senha incorreta.')
-    // } catch (error) {
-    //   setError('Erro ao realizar login. Tente novamente.')
-    // } finally {
-    //   setLoading(false)
-    // }
+      if (signInResult.user) {
+        router.replace('/tasks')
+      } else {
+        setError(signInResult.error)
+      }
+    } catch (error) {
+      setError('Erro ao realizar login. Tente novamente.')
+    }
   }
 
   return (

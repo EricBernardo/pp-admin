@@ -54,13 +54,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
       password,
     })
 
-    setCookie(undefined, 'next-auth.user', JSON.stringify(user), {
-      maxAge: 12 * 60 * 60, // 12 hour
-    })
+    if (user) {
+      setCookie(undefined, 'next-auth.user', JSON.stringify(user), {
+        maxAge: 12 * 60 * 60, // 12 hour
+      })
 
-    setUser(user)
+      setUser(user)
 
-    router.replace('/tasks')
+      return {
+        user: {
+          name: user.name,
+          emai: user.email,
+        },
+      }
+    }
+    return {
+      user: null,
+      error: 'Usuário não encontrado ou senha incorreta.',
+    }
   }
 
   return (
