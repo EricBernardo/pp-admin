@@ -1,11 +1,7 @@
-'use client'
+import { ShowErrorsProps } from './types'
 
-import { FC } from 'react'
+export function ShowErrors({ error }: ShowErrorsProps) {
+  if (!error) return null
 
-type Props = {
-  error?: string | null
-}
-
-export const ShowErrors: FC<Props> = ({ error = '' }) => {
   return <p className="text-red text-sm mb-6">{error}</p>
 }

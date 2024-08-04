@@ -1,17 +1,10 @@
-'use client'
+import { ToggleEyeIcon } from '@/components/ToggleEyeIcon'
+import { TogglePasswordVisibilityProps } from './types'
 
-import { ChangeEventHandler, FC } from 'react'
-import { ToggleEyeIcon } from '../ToggleEyeIcon'
-
-type Props = {
-  showPassword: boolean
-  handleTogglePasswordVisibility: ChangeEventHandler<HTMLInputElement>
-}
-
-export const TogglePasswordVisibility: FC<Props> = ({
-  showPassword = false,
+export function TogglePasswordVisibility({
+  showPassword,
   handleTogglePasswordVisibility,
-}) => {
+}: TogglePasswordVisibilityProps) {
   return (
     <div className="absolute right-2 top-10 flex items-center">
       <label
