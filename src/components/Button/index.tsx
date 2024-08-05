@@ -4,13 +4,13 @@ export function Button({
   disabled = false,
   label,
   type = 'submit',
-  className,
+  color = 'bg-green',
   handleOnClick,
 }: ButtonProps) {
   return (
     <button
       type={type}
-      className={`bg-green rounded-md text-white w-full py-3 px-3 mb-3 ${className}`}
+      className={`rounded-md text-white w-full py-3 px-3 mb-3 ${color}`}
       disabled={disabled}
       onClick={handleOnClick}
     >
