@@ -12,7 +12,7 @@ export function Header() {
   }
 
   return (
-    <header className="bg-blue-600 text-black shadow-md p-4 bg-white">
+    <header className="text-black shadow-md p-4 bg-white">
       <div className="container mx-auto flex justify-between items-center">
         <Image src="/logo.png" alt="PicPay Logo" width={118} height={40} />
 
