@@ -1,9 +1,10 @@
 'use client'
 
+import { AlertNotification } from '@/components/AlertNotification'
 import { Button } from '@/components/Button'
-import { ShowErrors } from '@/components/ShowErrors'
 import { TogglePasswordVisibility } from '@/components/TogglePasswordVisibility'
 import { AuthContext } from '@/contexts/AuthContext'
+import { AlertNotificationProps } from '@/types/alertNotification'
 import { AuthProps } from '@/types/user'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -21,7 +22,12 @@ export function FormLogin() {
   const { signIn } = useContext(AuthContext)
 
   const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+
+  const [notification, setNotification] = useState<AlertNotificationProps>({
+    message: null,
+    type: null,
+  })
+
   const [loading, setLoading] = useState<boolean>(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +46,7 @@ export function FormLogin() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    setError(null)
+    setNotification({ message: null, type: null })
 
     setLoading(true)
 
@@ -52,9 +58,9 @@ export function FormLogin() {
         return false
       }
 
-      setError(signInResult.error)
-    } catch (error) {
-      setError('Erro ao realizar login. Tente novamente.')
+      setNotification({ message: signInResult.error, type: 'error' })
+    } catch (e: any) {
+      setNotification({ message: e.message, type: 'error' })
     } finally {
       setLoading(false)
     }
@@ -97,7 +103,10 @@ export function FormLogin() {
           handleTogglePasswordVisibility={handleTogglePasswordVisibility}
         />
       </div>
-      <ShowErrors error={error} />
+      <AlertNotification
+        message={notification.message}
+        type={notification.type}
+      />
       <Button disabled={loading}>{loading ? 'Entrando...' : 'Entrar'}</Button>
     </form>
   )

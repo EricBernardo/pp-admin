@@ -12,6 +12,9 @@ import {
 } from '@heroicons/react/16/solid'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
+
+import { AlertNotificationProps } from '@/types/alertNotification'
+import { AlertNotification } from '../AlertNotification'
 import { ButtonSort } from '../ButtonSort'
 import { Pagination } from '../Pagination'
 
@@ -24,6 +27,10 @@ export function Table() {
   const [prevPage, setPrevPage] = useState<number>(0)
   const [sort, setSort] = useState<string>('ASC')
   const [sortColumn, setColumnSort] = useState<string>('name')
+  const [notification, setNotification] = useState<AlertNotificationProps>({
+    message: null,
+    type: null,
+  })
 
   const router = useRouter()
 
@@ -40,7 +47,7 @@ export function Table() {
           listTasks()
         })
         .catch((e) => {
-          alert(e.message)
+          setNotification({ message: e.message, type: 'error' })
         })
     }
   }
@@ -222,6 +229,10 @@ export function Table() {
           />
         </div>
       </div>
+      <AlertNotification
+        message={notification.message}
+        type={notification.type}
+      />
     </section>
   )
 }
