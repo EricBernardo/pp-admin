@@ -37,6 +37,10 @@ export function Table() {
     }
   }
 
+  const handlerEditItem = (id: string | undefined) => {
+    router.replace('/tasks/' + id)
+  }
+
   const listTasks = () => {
     get<TaskDataProps>('/tasks', {
       _page: currentPage,
@@ -148,6 +152,13 @@ export function Table() {
                         )}
                       </td>
                       <td className="px-4 py-3 flex items-center justify-end">
+                        <button
+                          type="button"
+                          className="text-white bg-green rounded-lg text-sm py-1 px-3 mr-2"
+                          onClick={() => handlerEditItem(task.id)}
+                        >
+                          Editar
+                        </button>
                         <button
                           type="button"
                           className="text-white bg-red rounded-lg text-sm py-1 px-3"
