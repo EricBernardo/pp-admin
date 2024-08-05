@@ -1,3 +1,5 @@
+import { ButtonSortProps } from './types'
+
 export function ButtonSort({ handleOnClick, children }: ButtonSortProps) {
   return (
     <button

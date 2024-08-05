@@ -13,7 +13,7 @@ type FormTaskProps = {
   taskID?: string
 }
 
-export default function FormTask({ taskID }: FormTaskProps) {
+export function FormTask({ taskID }: FormTaskProps) {
   const [task, setTask] = useState<TaskProps>({
     name: '',
     username: '',

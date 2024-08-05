@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import { Input } from '../Input'
 
-export default function FormLogin() {
+export function FormLogin() {
   const [user, setUser] = useState<AuthProps>({
     email: 'usuario@gmail.com',
     password: 'usuario',

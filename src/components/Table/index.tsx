@@ -1,7 +1,7 @@
 'use client'
 
 import { TaskDataProps } from '@/components/Table/types'
-import formatDate from '@/helpers/format-date'
+import { formatDate } from '@/helpers/format-date'
 import { TaskProps } from '@/types/task'
 import { del, get } from '@/utils/api'
 import {
@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 import { ButtonSort } from '../ButtonSort'
-import Pagination from '../Pagination'
+import { Pagination } from '../Pagination'
 
 export function Table() {
   const [tasks, setTasks] = useState<TaskProps[]>([])
@@ -33,15 +33,19 @@ export function Table() {
     listTasks()
   }
 
-  const handlerDeleteItem = (id: string | undefined) => {
+  const handlerDeleteItem = (id: string | number | undefined) => {
     if (confirm('Tem certeza de que deseja deletar este item?')) {
-      del<TaskDataProps>('/tasks/' + id).then(() => {
-        listTasks()
-      })
+      del<TaskDataProps>('/tasks/' + id)
+        .then(() => {
+          listTasks()
+        })
+        .catch((e) => {
+          alert(e.message)
+        })
     }
   }
 
-  const handlerEditItem = (id: string | undefined) => {
+  const handlerEditItem = (id: string | number | undefined) => {
     router.replace('/tasks/' + id)
   }
 
