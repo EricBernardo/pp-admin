@@ -1,7 +1,7 @@
 import { TaskDataProps } from '@/components/Table/types'
 import formatDate from '@/helpers/format-date'
 import { TaskProps } from '@/types/task'
-import { get } from '@/utils/api'
+import { del, get } from '@/utils/api'
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -13,12 +13,19 @@ import { FormEvent, useEffect, useState } from 'react'
 
 export function Table() {
   const [tasks, setTasks] = useState<TaskProps[]>([])
-  const [search, setSearch] = useState<string | null>(null)
-  const [items, setItems] = useState<number>(0)
+  const [search, setSearch] = useState<string>('')
 
   const handlerFormSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     listTasks()
+  }
+
+  const handlerDeleteItem = (id: string | undefined) => {
+    if (confirm('Tem certeza de que deseja deletar este item?')) {
+      del<TaskDataProps>('/tasks/' + id).then(() => {
+        listTasks()
+      })
+    }
   }
 
   const listTasks = () => {
@@ -28,7 +35,6 @@ export function Table() {
       name: search,
     }).then((result) => {
       setTasks(result.data)
-      setItems(result.items)
     })
   }
 
@@ -53,6 +59,7 @@ export function Table() {
                     id="search"
                     className="border text-sm rounded-lg pl-10 p-2"
                     placeholder="Search"
+                    value={search}
                     onChange={(e) => setSearch(e.target.value)}
                   />
                 </div>
@@ -107,7 +114,13 @@ export function Table() {
                         )}
                       </td>
                       <td className="px-4 py-3 flex items-center justify-end">
-                        <button type="button">BUTON</button>
+                        <button
+                          type="button"
+                          className="text-white bg-red rounded-lg text-sm py-1 px-3"
+                          onClick={() => handlerDeleteItem(task.id)}
+                        >
+                          Deletar
+                        </button>
                       </td>
                     </tr>
                   )
