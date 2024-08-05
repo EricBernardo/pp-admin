@@ -2,10 +2,10 @@ import { ButtonProps } from './types'
 
 export function Button({
   disabled = false,
-  label,
   type = 'submit',
   color = 'bg-green',
   handleOnClick,
+  children,
 }: ButtonProps) {
   return (
     <button
@@ -14,7 +14,7 @@ export function Button({
       disabled={disabled}
       onClick={handleOnClick}
     >
-      {label}
+      {children}
     </button>
   )
 }

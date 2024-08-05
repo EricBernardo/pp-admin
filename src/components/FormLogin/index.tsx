@@ -98,7 +98,7 @@ export default function FormLogin() {
         />
       </div>
       <ShowErrors error={error} />
-      <Button label={loading ? 'Entrando...' : 'Entrar'} disabled={loading} />
+      <Button disabled={loading}>{loading ? 'Entrando...' : 'Entrar'}</Button>
     </form>
   )
 }

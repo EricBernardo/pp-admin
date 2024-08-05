@@ -167,13 +167,10 @@ export default function FormTask({ taskID }: FormTaskProps) {
         </div>
 
         <ShowErrors error={error} />
-        <Button label={loading ? 'Aguarde...' : 'Salvar'} disabled={loading} />
-        <Button
-          label="Voltar"
-          type="button"
-          color="bg-gray"
-          handleOnClick={handleOnClickBack}
-        />
+        <Button disabled={loading}>{loading ? 'Aguarde...' : 'Salvar'}</Button>
+        <Button type="button" color="bg-gray" handleOnClick={handleOnClickBack}>
+          Voltar
+        </Button>
       </form>
     </main>
   )
