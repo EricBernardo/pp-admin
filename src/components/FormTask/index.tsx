@@ -105,7 +105,7 @@ export default function FormTask({ taskID }: FormTaskProps) {
   }, [])
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start mt-5">
+    <main className="flex flex-col items-center justify-start my-5">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-sm mx-auto bg-white p-8 rounded-lg shadow-md"
