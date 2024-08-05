@@ -9,7 +9,7 @@ export function TogglePasswordVisibility({
     <div className="absolute right-2 top-10 flex items-center">
       <label
         htmlFor="showPassword"
-        className="ml-2 text-sm text-gray-700 cursor-pointer flex items-center"
+        className="ml-2 text-sm text-gray-700 cursor-pointer flex items-center noselect"
       >
         <input
           type="checkbox"
