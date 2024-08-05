@@ -1,5 +1,3 @@
-import React from 'react'
-
 type PaginationProps = {
   currentPage: number
   totalPages: number
@@ -8,13 +6,13 @@ type PaginationProps = {
   handleClickPage: (page: number) => void
 }
 
-const Pagination: React.FC<PaginationProps> = ({
+export function Pagination({
   currentPage,
   totalPages,
   handleClickPrev,
   handleClickNext,
   handleClickPage,
-}) => {
+}: PaginationProps) {
   const buttonClass =
     'p-4 rounded-md border border-black w-5 h-5 flex items-center justify-center mb-5 mr-2'
 
@@ -71,5 +69,3 @@ const Pagination: React.FC<PaginationProps> = ({
     </nav>
   )
 }
-
-export default Pagination

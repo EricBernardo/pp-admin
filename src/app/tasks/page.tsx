@@ -3,7 +3,7 @@
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
 import { Table } from '@/components/Table'
-import withAuth from '@/middleware/withAuth'
+import { withAuth } from '@/middleware/withAuth'
 
 export function ListTasks() {
   return (

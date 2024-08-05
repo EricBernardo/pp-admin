@@ -2,7 +2,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
-const withAuth = (WrappedComponent) => {
+export function withAuth(WrappedComponent) {
   const ProtectedComponent = (props) => {
     const { user, loading } = useAuth()
     const router = useRouter()
@@ -18,5 +18,3 @@ const withAuth = (WrappedComponent) => {
 
   return ProtectedComponent
 }
-
-export default withAuth
