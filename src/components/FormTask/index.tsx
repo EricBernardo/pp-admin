@@ -3,13 +3,17 @@
 import { Button } from '@/components/Button'
 import { ShowErrors } from '@/components/ShowErrors'
 import { TaskProps } from '@/types/task'
-import { post } from '@/utils/api'
+import { get, post } from '@/utils/api'
 import { useRouter } from 'next/navigation'
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { Checkbox } from '../Checkbox'
 import { Input } from '../Input'
 
-export default function FormTask() {
+type FormTaskProps = {
+  taskID?: string
+}
+
+export default function FormTask({ taskID }: FormTaskProps) {
   const [task, setTask] = useState<TaskProps>({
     name: '',
     username: '',
@@ -34,12 +38,16 @@ export default function FormTask() {
   }
 
   const handleClickCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name } = e.target
 
     setTask((prevState) => ({
       ...prevState,
-      [name]: value === 'on' ? true : false,
+      [name]: !task.isPayed,
     }))
+  }
+
+  const handleOnClickBack = () => {
+    router.replace('/tasks')
   }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -67,6 +75,26 @@ export default function FormTask() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (taskID) {
+      setLoading(true)
+      get<TaskProps>('/tasks/' + taskID)
+        .then((result) => {
+          setTask({
+            name: result.name,
+            username: result.username,
+            title: result.title,
+            value: result.value ?? 0,
+            date: result.date,
+            isPayed: result.isPayed,
+          })
+        })
+        .finally(() => {
+          setLoading(false)
+        })
+    }
+  }, [])
 
   return (
     <form
@@ -124,12 +152,19 @@ export default function FormTask() {
           id="isPayed"
           name="isPayed"
           label="Pago"
+          checked={task.isPayed}
           handleOnClick={handleClickCheckbox}
         />
       </div>
 
       <ShowErrors error={error} />
       <Button label={loading ? 'Aguarde...' : 'Salvar'} disabled={loading} />
+      <Button
+        label="Voltar"
+        type="button"
+        className="bg-gray"
+        handleOnClick={handleOnClickBack}
+      />
     </form>
   )
 }

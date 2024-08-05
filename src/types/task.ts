@@ -3,7 +3,7 @@ export type TaskProps = {
   name: string
   username: string
   title: string
-  value: number | null
+  value: number
   date: string
   isPayed: boolean
 }
