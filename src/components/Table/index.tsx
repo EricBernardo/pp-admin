@@ -6,11 +6,13 @@ import { TaskProps } from '@/types/task'
 import { del, get } from '@/utils/api'
 import {
   CheckCircleIcon,
+  ChevronUpDownIcon,
   MagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/16/solid'
 import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
+import { ButtonSort } from '../ButtonSort'
 import Pagination from '../Pagination'
 
 export function Table() {
@@ -20,6 +22,8 @@ export function Table() {
   const [totalPages, setTotalPage] = useState<number>(0)
   const [nextPage, setNextPage] = useState<number>(0)
   const [prevPage, setPrevPage] = useState<number>(0)
+  const [sort, setSort] = useState<string>('ASC')
+  const [sortColumn, setColumnSort] = useState<string>('name')
 
   const router = useRouter()
 
@@ -46,6 +50,7 @@ export function Table() {
       _page: currentPage,
       _per_page: 10,
       name: search,
+      _sort: `${sort === 'DESC' ? '-' : ''}${sortColumn}`,
     }).then((result) => {
       setTasks(result.data)
 
@@ -67,6 +72,11 @@ export function Table() {
     listTasks()
   }
 
+  const handleSortinColumn = (column: string): void => {
+    setColumnSort(column)
+    setSort(sort === 'ASC' ? 'DESC' : 'ASC')
+  }
+
   const handleRedirectCreate = () => {
     router.replace('/tasks/create')
   }
@@ -77,31 +87,32 @@ export function Table() {
 
   useEffect(() => {
     listTasks()
-  }, [currentPage])
+  }, [currentPage, sort, sortColumn])
 
   return (
     <section className="bg-gray-50 p-3 sm:p-5">
       <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
         <div className="bg-white relative shadow-lg sm:rounded-lg overflow-hidden">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-            <div className="w-full md:w-1/2">
-              <form className="flex items-center" onSubmit={handlerFormSearch}>
-                <label className="sr-only">Search</label>
-                <div className="relative w-full">
-                  <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <MagnifyingGlassIcon width={20} />
-                  </div>
-                  <input
-                    type="text"
-                    id="search"
-                    className="border text-sm rounded-lg pl-10 p-2"
-                    placeholder="Search"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
+            <form
+              className="flex items-center w-full md:w-auto"
+              onSubmit={handlerFormSearch}
+            >
+              <label className="sr-only">Buscar</label>
+              <div className="relative w-full">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <MagnifyingGlassIcon width={20} />
                 </div>
-              </form>
-            </div>
+                <input
+                  type="text"
+                  id="search"
+                  className="border text-sm rounded-lg pl-10 p-2 w-full"
+                  placeholder="Buscar"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </form>
             <div className="w-full md:w-auto flex flex-col md:flex-row">
               <button
                 type="button"
@@ -114,24 +125,49 @@ export function Table() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <thead className="text-xs uppercase dark:bg-gray-700 dark:text-gray-400 border-b">
                 <tr>
-                  <th scope="col" className="px-4 py-3">
-                    Usuário
+                  <th scope="col" className="px-6 py-3 w-1/6">
+                    <ButtonSort
+                      handleOnClick={() => handleSortinColumn('name')}
+                    >
+                      Usuário
+                      <ChevronUpDownIcon height={20} />
+                    </ButtonSort>
                   </th>
-                  <th scope="col" className="px-4 py-3">
-                    Título
+                  <th scope="col" className="px-4 py-3 w-1/6">
+                    <ButtonSort
+                      handleOnClick={() => handleSortinColumn('title')}
+                    >
+                      Título
+                      <ChevronUpDownIcon height={20} />
+                    </ButtonSort>
                   </th>
-                  <th scope="col" className="px-4 py-3">
-                    Data
+                  <th scope="col" className="px-4 py-3 w-1/6">
+                    <ButtonSort
+                      handleOnClick={() => handleSortinColumn('date')}
+                    >
+                      Data
+                      <ChevronUpDownIcon height={20} />
+                    </ButtonSort>
                   </th>
-                  <th scope="col" className="px-4 py-3">
-                    Valor
+                  <th scope="col" className="px-4 py-3 w-1/6">
+                    <ButtonSort
+                      handleOnClick={() => handleSortinColumn('value')}
+                    >
+                      Valor
+                      <ChevronUpDownIcon height={20} />
+                    </ButtonSort>
                   </th>
-                  <th scope="col" className="px-4 py-3">
-                    Pago
+                  <th scope="col" className="px-4 py-3 w-1/6">
+                    <ButtonSort
+                      handleOnClick={() => handleSortinColumn('isPayed')}
+                    >
+                      Pago
+                      <ChevronUpDownIcon height={20} />
+                    </ButtonSort>
                   </th>
-                  <th scope="col" className="px-4 py-3">
+                  <th scope="col" className="px-4 py-3 text-end">
                     Ações
                   </th>
                 </tr>
@@ -140,7 +176,7 @@ export function Table() {
                 {tasks.map((task) => {
                   return (
                     <tr className="border-b" key={task.id}>
-                      <th className="px-4 py-3">{task.name}</th>
+                      <td className="px-4 py-3">{task.name}</td>
                       <td className="px-4 py-3">{task.title}</td>
                       <td className="px-4 py-3">{formatDate(task.date)}</td>
                       <td className="px-4 py-3">R$ {task.value}</td>
