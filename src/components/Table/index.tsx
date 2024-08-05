@@ -1,22 +1,28 @@
+'use client'
+
 import { TaskDataProps } from '@/components/Table/types'
 import formatDate from '@/helpers/format-date'
 import { TaskProps } from '@/types/task'
 import { del, get } from '@/utils/api'
 import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
   CheckCircleIcon,
   MagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/16/solid'
 import { FormEvent, useEffect, useState } from 'react'
+import Pagination from '../Pagination'
 
 export function Table() {
   const [tasks, setTasks] = useState<TaskProps[]>([])
   const [search, setSearch] = useState<string>('')
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPage] = useState<number>(0)
+  const [nextPage, setNextPage] = useState<number>(0)
+  const [prevPage, setPrevPage] = useState<number>(0)
 
   const handlerFormSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setCurrentPage(1)
     listTasks()
   }
 
@@ -30,17 +36,37 @@ export function Table() {
 
   const listTasks = () => {
     get<TaskDataProps>('/tasks', {
-      _page: 1,
-      _per_page: 5,
+      _page: currentPage,
+      _per_page: 10,
       name: search,
     }).then((result) => {
       setTasks(result.data)
+
+      setTotalPage(result.pages)
+      setNextPage(result.next)
+      setPrevPage(result.prev)
     })
+  }
+
+  const handleClickNextPage = (): void => {
+    setCurrentPage(nextPage)
+  }
+  const handleClickPrevPage = (): void => {
+    setCurrentPage(prevPage)
+  }
+
+  const handleClickPage = (page: number): void => {
+    setCurrentPage(page)
+    listTasks()
   }
 
   useEffect(() => {
     listTasks()
   }, [])
+
+  useEffect(() => {
+    listTasks()
+  }, [currentPage])
 
   return (
     <section className="bg-gray-50 p-3 sm:p-5">
@@ -128,72 +154,13 @@ export function Table() {
               </tbody>
             </table>
           </div>
-          <nav
-            className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-            aria-label="Table navigation"
-          >
-            <ul className="inline-flex items-stretch -space-x-px">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <ArrowLeftIcon width={20} />
-                  <span className="sr-only">Previous</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  1
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  2
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  aria-current="page"
-                  className="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-                >
-                  3
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  ...
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  100
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-                >
-                  <ArrowRightIcon width={20} />
-                  <span className="sr-only">Next</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handleClickNext={handleClickNextPage}
+            handleClickPage={handleClickPage}
+            handleClickPrev={handleClickPrevPage}
+          />
         </div>
       </div>
     </section>
