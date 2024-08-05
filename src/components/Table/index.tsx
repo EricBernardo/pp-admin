@@ -9,6 +9,7 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/16/solid'
+import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 import Pagination from '../Pagination'
 
@@ -19,6 +20,8 @@ export function Table() {
   const [totalPages, setTotalPage] = useState<number>(0)
   const [nextPage, setNextPage] = useState<number>(0)
   const [prevPage, setPrevPage] = useState<number>(0)
+
+  const router = useRouter()
 
   const handlerFormSearch = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -60,6 +63,10 @@ export function Table() {
     listTasks()
   }
 
+  const handleRedirectCreate = () => {
+    router.replace('/tasks/create')
+  }
+
   useEffect(() => {
     listTasks()
   }, [])
@@ -95,6 +102,7 @@ export function Table() {
               <button
                 type="button"
                 className="text-white bg-green rounded-lg text-sm px-4 py-2"
+                onClick={handleRedirectCreate}
               >
                 Adicionar
               </button>

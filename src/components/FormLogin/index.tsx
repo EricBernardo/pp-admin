@@ -4,13 +4,13 @@ import { Button } from '@/components/Button'
 import { ShowErrors } from '@/components/ShowErrors'
 import { TogglePasswordVisibility } from '@/components/TogglePasswordVisibility'
 import { AuthContext } from '@/contexts/AuthContext'
-import validateEmail from '@/helpers/validate-email'
-import { UserProps } from '@/types/user'
+import { AuthProps } from '@/types/user'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
+import { Input } from '../Input'
 
 export default function FormLogin() {
-  const [user, setUser] = useState<UserProps>({
+  const [user, setUser] = useState<AuthProps>({
     email: 'usuario@gmail.com',
     password: 'usuario',
   })
@@ -41,15 +41,7 @@ export default function FormLogin() {
 
     setError(null)
 
-    if (!user.email || !user.password) {
-      setError('Por favor, preencha todos os campos.')
-      return
-    }
-
-    if (!validateEmail(user.email)) {
-      setError('Por favor, insira um email válido.')
-      return
-    }
+    setLoading(true)
 
     try {
       const signInResult = await signIn(user)
@@ -62,6 +54,8 @@ export default function FormLogin() {
       setError(signInResult.error)
     } catch (error) {
       setError('Erro ao realizar login. Tente novamente.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -71,37 +65,23 @@ export default function FormLogin() {
       className="w-full max-w-sm mx-auto bg-white p-8 rounded-lg shadow-md"
     >
       <div className="mb-4">
-        <label
-          htmlFor="email"
-          className="block text-gray-700 text-sm font-bold mb-2"
-        >
-          E-mail
-        </label>
-        <input
-          type="text"
+        <Input
           id="email"
           name="email"
-          className="border border-gray-300 rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          label="E-mail"
+          type="email"
           value={user.email}
-          onChange={handleChange}
-          aria-invalid={error ? 'true' : 'false'}
+          handleChange={handleChange}
         />
       </div>
       <div className="mb-6 relative">
-        <label
-          htmlFor="password"
-          className="block text-gray-700 text-sm font-bold mb-2"
-        >
-          Senha
-        </label>
-        <input
-          type={showPassword ? 'text' : 'password'}
+        <Input
           id="password"
           name="password"
-          className="border border-gray-300 rounded-md w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          label="Senha"
+          type={showPassword ? 'text' : 'password'}
           value={user.password}
-          onChange={handleChange}
-          aria-invalid={error ? 'true' : 'false'}
+          handleChange={handleChange}
         />
         <TogglePasswordVisibility
           showPassword={showPassword}
