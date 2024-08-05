@@ -1,7 +1,8 @@
 'use client'
 
+import { AlertNotification } from '@/components/AlertNotification'
 import { Button } from '@/components/Button'
-import { ShowErrors } from '@/components/ShowErrors'
+import { AlertNotificationProps } from '@/types/alertNotification'
 import { TaskProps } from '@/types/task'
 import { get, post } from '@/utils/api'
 import { useRouter } from 'next/navigation'
@@ -25,7 +26,10 @@ export function FormTask({ taskID }: FormTaskProps) {
 
   const router = useRouter()
 
-  const [error, setError] = useState<string | null>(null)
+  const [notification, setNotification] = useState<AlertNotificationProps>({
+    message: null,
+    type: null,
+  })
   const [loading, setLoading] = useState<boolean>(false)
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -53,10 +57,10 @@ export function FormTask({ taskID }: FormTaskProps) {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    setError(null)
+    setNotification({ message: null, type: null })
 
-    if (!task.value) {
-      setError('Preencha o campo Valor')
+    if (task.value) {
+      setNotification({ message: 'Preencha o campo Valor', type: 'error' })
       return
     }
 
@@ -70,7 +74,10 @@ export function FormTask({ taskID }: FormTaskProps) {
         }
       })
     } catch (error) {
-      setError('Ocorreu algum erro. Tente novamente mais tarde.')
+      setNotification({
+        message: 'Ocorreu algum erro. Tente novamente mais tarde.',
+        type: 'error',
+      })
     } finally {
       setLoading(false)
     }
@@ -92,7 +99,7 @@ export function FormTask({ taskID }: FormTaskProps) {
         })
         .catch((e) => {
           const { message } = e
-          setError(message)
+          setNotification({ message: message, type: 'error' })
 
           setTimeout(() => {
             router.replace('/tasks')
@@ -166,7 +173,10 @@ export function FormTask({ taskID }: FormTaskProps) {
           />
         </div>
 
-        <ShowErrors error={error} />
+        <AlertNotification
+          message={notification.message}
+          type={notification.type}
+        />
         <Button disabled={loading}>{loading ? 'Aguarde...' : 'Salvar'}</Button>
         <Button type="button" color="bg-gray" handleOnClick={handleOnClickBack}>
           Voltar
