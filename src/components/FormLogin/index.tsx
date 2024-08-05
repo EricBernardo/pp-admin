@@ -5,6 +5,7 @@ import { ShowErrors } from '@/components/ShowErrors'
 import { TogglePasswordVisibility } from '@/components/TogglePasswordVisibility'
 import { AuthContext } from '@/contexts/AuthContext'
 import { AuthProps } from '@/types/user'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import { Input } from '../Input'
@@ -64,6 +65,14 @@ export default function FormLogin() {
       onSubmit={handleSubmit}
       className="w-full max-w-sm mx-auto bg-white p-8 rounded-lg shadow-md"
     >
+      <Image
+        src="/logo.png"
+        alt="PicPay Logo"
+        className="mx-auto"
+        width={118}
+        height={40}
+      />
+      <h1 className="m-4 text-2xl font-bold text-center">Acesse sua conta</h1>
       <div className="mb-4">
         <Input
           id="email"
