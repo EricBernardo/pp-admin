@@ -2,7 +2,7 @@ const { render, screen } = require('@testing-library/react')
 
 import { AlertNotification } from '.'
 
-describe('<AlertNotification.test />', () => {
+describe('<AlertNotification />', () => {
   test('should render the alertNotification with the text "Saved successfully"', () => {
     render(<AlertNotification message="Saved successfully" />)
 

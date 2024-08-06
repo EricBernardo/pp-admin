@@ -10,13 +10,15 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from '@heroicons/react/16/solid'
+
 import { useRouter } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 
+import { AlertNotification } from '@/components/AlertNotification'
+import { ButtonSort } from '@/components/ButtonSort'
+import { Pagination } from '@/components/Pagination'
+
 import { AlertNotificationProps } from '@/types/alertNotification'
-import { AlertNotification } from '../AlertNotification'
-import { ButtonSort } from '../ButtonSort'
-import { Pagination } from '../Pagination'
 
 export function Table() {
   const [tasks, setTasks] = useState<TaskProps[]>([])

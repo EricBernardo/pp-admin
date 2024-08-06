@@ -2,6 +2,7 @@
 
 import { AlertNotification } from '@/components/AlertNotification'
 import { Button } from '@/components/Button'
+import { Input } from '@/components/Input'
 import { TogglePasswordVisibility } from '@/components/TogglePasswordVisibility'
 import { AuthContext } from '@/contexts/AuthContext'
 import { AlertNotificationProps } from '@/types/alertNotification'
@@ -9,12 +10,11 @@ import { AuthProps } from '@/types/user'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, FormEvent, useContext, useState } from 'react'
-import { Input } from '../Input'
 
 export function FormLogin() {
   const [user, setUser] = useState<AuthProps>({
-    email: 'usuario@gmail.com',
-    password: 'usuario',
+    email: '',
+    password: '',
   })
 
   const router = useRouter()
@@ -46,8 +46,6 @@ export function FormLogin() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    setNotification({ message: null, type: null })
-
     setLoading(true)
 
     try {
@@ -58,9 +56,10 @@ export function FormLogin() {
         return false
       }
 
-      setNotification({ message: signInResult.error, type: 'error' })
+      setNotification({ message: signInResult?.error, type: 'error' })
     } catch (e: any) {
-      setNotification({ message: e.message, type: 'error' })
+      console.log('___e', e)
+      // setNotification({ message: e.message, type: 'error' })
     } finally {
       setLoading(false)
     }
