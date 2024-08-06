@@ -3,5 +3,5 @@ export type InputProps = {
   name: string
   label: string
   checked: boolean
-  handleOnClick?: any
+  handleOnClick?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
