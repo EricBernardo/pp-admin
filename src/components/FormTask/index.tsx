@@ -2,13 +2,13 @@
 
 import { AlertNotification } from '@/components/AlertNotification'
 import { Button } from '@/components/Button'
+import { Checkbox } from '@/components/Checkbox'
+import { Input } from '@/components/Input'
 import { AlertNotificationProps } from '@/types/alertNotification'
 import { TaskProps } from '@/types/task'
-import { get, post } from '@/utils/api'
+import { get, post, put } from '@/utils/api'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import { Checkbox } from '../Checkbox'
-import { Input } from '../Input'
 
 type FormTaskProps = {
   taskID?: string
@@ -54,6 +54,34 @@ export function FormTask({ taskID }: FormTaskProps) {
     router.replace('/tasks')
   }
 
+  const createTask = () => {
+    post<TaskProps>(`/tasks`, task).then((result) => {
+      if (result.id) {
+        setNotification({
+          message: 'Registro cadastrado com sucesso.',
+          type: 'success',
+        })
+
+        setTimeout(() => {
+          router.replace('/tasks/' + result.id)
+        }, 2000)
+        return
+      }
+    })
+  }
+
+  const updateTask = () => {
+    put<TaskProps>(`/tasks/${taskID}`, task).then((result) => {
+      if (result.id) {
+        setNotification({
+          message: 'Registro atualizado com sucesso.',
+          type: 'success',
+        })
+        return
+      }
+    })
+  }
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -67,20 +95,11 @@ export function FormTask({ taskID }: FormTaskProps) {
     setLoading(true)
 
     try {
-      post<TaskProps>('/tasks', task).then((result) => {
-        if (result.id) {
-          setNotification({
-            message: 'Registro salvo com sucesso.',
-            type: 'success',
-          })
-
-          setTimeout(() => {
-            router.replace('/tasks')
-          }, 1000)
-
-          return
-        }
-      })
+      if (!taskID) {
+        createTask()
+      } else {
+        updateTask()
+      }
     } catch (error) {
       setNotification({
         message: 'Ocorreu algum erro. Tente novamente mais tarde.',
