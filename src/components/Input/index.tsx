@@ -12,12 +12,14 @@ export function Input({
   return (
     <>
       <label
+        data-testid="label"
         htmlFor={id}
         className="block text-gray-700 text-sm font-bold mb-2"
       >
         {label}
       </label>
       <input
+        data-testid="input"
         type={type}
         id={id}
         name={name}
