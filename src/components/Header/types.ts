@@ -3,5 +3,5 @@ export type ButtonProps = {
   label: string
   disabled?: boolean
   className?: string
-  handleOnClick?: any
+  handleOnClick?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }

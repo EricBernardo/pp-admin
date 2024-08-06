@@ -1,7 +1,7 @@
 import { InputProps } from './types'
 
 export function Input({
-  handleChange,
+  handleChange = () => {},
   value,
   label,
   type = 'text',
