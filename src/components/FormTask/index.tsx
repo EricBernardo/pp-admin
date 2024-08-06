@@ -59,7 +59,7 @@ export function FormTask({ taskID }: FormTaskProps) {
 
     setNotification({ message: null, type: null })
 
-    if (task.value) {
+    if (!task.value) {
       setNotification({ message: 'Preencha o campo Valor', type: 'error' })
       return
     }
@@ -69,8 +69,10 @@ export function FormTask({ taskID }: FormTaskProps) {
     try {
       post<TaskProps>('/tasks', task).then((result) => {
         if (result.id) {
-          router.replace('/tasks/' + result.id)
-          return true
+          setNotification({
+            message: 'Registro salvo com sucesso.',
+            type: 'success',
+          })
         }
       })
     } catch (error) {
@@ -93,7 +95,7 @@ export function FormTask({ taskID }: FormTaskProps) {
             username: result.username,
             title: result.title,
             value: result.value ?? 0,
-            date: result.date,
+            date: new Date(result.date).toISOString().split('T')[0],
             isPayed: result.isPayed,
           })
         })
