@@ -1,4 +1,4 @@
 export type ButtonSortProps = {
-  handleOnClick: any
+  handleOnClick: (event: React.ChangeEvent<HTMLInputElement>) => void
   children: React.ReactNode
 }
