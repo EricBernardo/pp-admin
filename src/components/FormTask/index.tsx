@@ -73,6 +73,12 @@ export function FormTask({ taskID }: FormTaskProps) {
             message: 'Registro salvo com sucesso.',
             type: 'success',
           })
+
+          setTimeout(() => {
+            router.replace('/tasks')
+          }, 1000)
+
+          return
         }
       })
     } catch (error) {
